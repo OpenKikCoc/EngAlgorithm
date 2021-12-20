@@ -156,7 +156,7 @@ pass
 
 > product：【乘和】Twenty-two is the product of elven and two. 
 
-S: Optimizing the number of multiplications
+#### S: Optimizing the number of multiplications
 
 ```python
 def find_product(lst):
@@ -186,7 +186,147 @@ Since this algorithm only traverses over the list twice, it’s in linear time, 
 
 
 
+### 5 Find Minimum value
+
+#### S1: sort
+
+- We can use the generic Python `.sort()` funciton here. BUt in a real interview, you should implement your own sort of function.
+- Here is the `Merge Sort`
+  - 
+
+```python
+def find_minimum(lst):
+    if (len(lst) <= 0):
+        return None
+    merge_sort(lst)  # sort list
+    return lst[0]  # return first element
+
+  
+print(find_minimum([9, 2, 3, 6]))
+
+
+def mergeSort(arr, l, r):
+    if l < r:
+        m = l + (r - l) // 2
+        
+        # Recursive call on each half
+        mergeSort(arr, l, m)
+        mergeSort(arr, m + 1, r)
+        
+        # Two iterators for traversing the two halves
+        # And a tmp list c to store the sorted lists
+        p1, p2, c = l, m + 1, []   # 踩坑： p1 = l
+        while p1 <= m and p2 <= r:
+            if arr[p1] <= arr[p2]:
+                c.append(arr[p1])
+                # Move the iterator forward
+                p1 += 1
+            else:
+                c.append(arr[p2])
+                p2 += 1
+                
+        # For all the remaining values
+        while p1 <= m:
+            c.append(arr[p1])
+            p1 += 1
+        while p2 <= r:
+            c.append(arr[p2])
+            p2 += 1
+        for i in range(len(c)):
+            arr[l + i] = c[i]
+
+if __name__=="__main__":
+    n = int(input())
+    nums = list(map(int, input().split()))
+    mergeSort(nums, 0, n - 1)
+    return nums[0]  # return first element
+```
+
+##### Time Complexity
+
+The build-in sort function `sort` and the `mergeSort` are in *O*(*n**l**o**g**n*). Since we only index and return after that, which are constant time operations, this solution takes *O*(*n**l**o**g**n*) time.
+
+
+
+#### S2: Iterate over the list
+
+```python
+def find_minimum(lst):
+    if (len(lst) <= 0):
+        return None
+    minimum = lst[0]
+    for ele in lst:
+        # update if found a smaller element
+        if ele < minimum:
+            minimum = ele
+    return minimum
+
+
+print(find_minimum([9, 2, 3, 6]))
+```
+
+- Start with the first element and save it as the smallest value. Then, iterate over the rest of the lisr and whenever an element that is smaller than the number already stored as `minimum` is come across, set  `minimum` to that number. By the end og the list, the number stored in the  `minimum` will be the smallest integer in the whole list.
+
+##### Time Complexity
+
+Since the entire list is iterated over once, this algorithm is in linear time(线性时间), *O*(*n*).
+
+
+
+### 6 Find Second Maximum Value in a list
+
+#### S1: Traversing the list twice
+
+```python
+def find_second_maximum(lst):
+    maxv1 = maxv2 = float('-inf');
+    for c in lst:
+        if c > maxv1:
+            maxv1 = c
+    for c in lst:
+        if c != maxv1 and c > maxv2:
+            maxv2 = c
+    return maxv2
+```
+
+- First, initialize the two infinity.
+- Then, we traverse the list twice. In the first traversal, we find the maximum element. In the second traversal, find the greatest element less than the element obtanined in the first traversal.
+
+##### Time Complexity
+
+The solution is O(n) since the list is traversed twice.
+
+
+
+#### S2: Finding in one traversal
+
+```python
+def find_second_maximum(lst):
+   if (len(lst) < 2):
+       return
+   # initialize the two to infinity
+   maxv1 = maxv2 = float('-inf')
+   for i in range(len(lst)):
+       # update the max_no if max_no value found
+       if (lst[i] > maxv1):
+           maxv2 = maxv1
+           maxv1 = lst[i]
+       # check if it is the second_max_no and not equal to max_no
+       elif (lst[i] > maxv2 and lst[i] != maxv1):
+           maxv2 = lst[i]
+   if (maxv2 == float('-inf')):
+       return
+   else:
+       return maxv2
+```
+
+- We initialize two variables
+
+
+
 ### Question
 
 Q1: in 2, why S2’s time complexity isO(nm)?
+
+
 
